@@ -1,39 +1,50 @@
-export function renderHero() {
+import { SHOWCASE } from '../services/images.js';
+
+// Text that scrolls across the strip under the hero
+const MARQUEE = ['New drops every Friday', 'Free shipping over ₹999', 'Easy 7-day returns', 'Ask our AI stylist anything'];
+
+export function renderHero(animate = false) {
+  const strip = MARQUEE.map(text => `<span>${text}</span><span class="marquee-star">✦</span>`).join('');
   return `
-  <div class="hero">
+  <section class="hero ${animate ? 'animate-in' : ''}">
     <div class="container hero-grid">
       <div class="hero-content">
         <div class="hero-badge">
-          <span>New Collection 2026</span>
+          <span>✦ Drop 07 · 2026</span>
         </div>
-        <h1 class="hero-title">Elevate Your Style with Premium Fashion</h1>
-        <p class="hero-desc">Discover our curated collection of timeless pieces that blend sophistication with modern design.</p>
+        <h1 class="hero-title">Fits that <span class="hero-highlight">hit different.</span></h1>
+        <p class="hero-desc">Streetwear, ethnic and everyday staples for men, women and kids. Can't decide? Ask the AI stylist.</p>
         <div class="hero-actions">
-          <button class="btn btn-primary">Shop Now</button>
-          <button class="btn btn-outline">View Catalog</button>
+          <button class="btn btn-primary btn-lg" onclick="document.getElementById('shop').scrollIntoView({ behavior: 'smooth' })">Shop the drop →</button>
+          <button class="btn btn-outline btn-lg" onclick="document.getElementById('chatToggle')?.click()">✦ Ask AI stylist</button>
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
             <p>500+</p>
-            <p>Premium Products</p>
+            <p>Styles live</p>
           </div>
           <div class="hero-stat">
-            <p>50K+</p>
-            <p>Happy Customers</p>
+            <p>₹299</p>
+            <p>Starting price</p>
           </div>
           <div class="hero-stat">
-            <p>4.9</p>
-            <p>Average Rating</p>
+            <p>24/7</p>
+            <p>AI stylist</p>
           </div>
         </div>
       </div>
       <div class="hero-image-container">
         <div class="hero-image-bg"></div>
-        <img src="https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Fashion Model" class="hero-image" />
+        <img src="${SHOWCASE.hero}" alt="Model in an oversized shirt and orange sunglasses" class="hero-image" />
+        <img src="${SHOWCASE.heroSmall}" alt="Man in a yellow jacket" class="hero-image-small" />
+        <span class="hero-sticker">🔥 Trending now</span>
       </div>
     </div>
     <div class="hero-decoration-1"></div>
     <div class="hero-decoration-2"></div>
+  </section>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">${strip}${strip}</div>
   </div>
 `;
 }

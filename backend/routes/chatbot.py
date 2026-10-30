@@ -15,8 +15,13 @@ from pydantic_ai import Agent, RunContext
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
+
+# Groq retires models from time to time (qwen/qwen3-32b is gone),
+# so the model can be changed with GROQ_MODEL in .env
+GROQ_MODEL = os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b"
 
 router = APIRouter(prefix="/chat", tags=["Chatbot"])
 
@@ -43,7 +48,7 @@ class StoreDeps(BaseModel):
 
 
 agent = Agent(
-    "groq:qwen/qwen3-32b",
+    f"groq:{GROQ_MODEL}",
     deps_type=StoreDeps, ## they way it will output
     system_prompt=(
         "You are a friendly shopping assistant for ClothStore — an online clothing store. "

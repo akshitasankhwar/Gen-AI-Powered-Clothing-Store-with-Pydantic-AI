@@ -9,7 +9,7 @@ export function renderHeader() {
         <button class="menu-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
-        <h1 class="header-logo" style="cursor: pointer;" onclick="window.location.hash='#/'">LUXE</h1>
+        <h1 class="header-logo" onclick="window.location.hash='#/'">LUXE<span class="logo-dot"></span></h1>
         <nav class="nav">
           <button class="nav-link" onclick="handleCatClick('')">All</button>
           <button class="nav-link" onclick="handleCatClick('men')">Men</button>
@@ -18,7 +18,7 @@ export function renderHeader() {
         </nav>
       </div>
       <div class="header-right">
-        <a href="#/add-products" class="btn btn-primary" style="margin-right: 15px;">Add Products</a>
+        <a href="#/add-products" class="btn btn-outline">Add Products</a>
         <button class="icon-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         </button>

@@ -1,6 +1,7 @@
 import { state } from '../services/state.js';
 import { getCart, placeOrder, clearCart, fetchProducts } from '../services/api_v2.js';
 import { renderHeader } from '../components/Header.js';
+import { productImage, FALLBACK_IMAGE } from '../services/images.js';
 
 export async function renderCart() {
   document.getElementById('app').innerHTML = `
@@ -25,7 +26,7 @@ export async function renderCart() {
       return {
         ...item,
         price: match.price || 0,
-        image: match.image || 'https://via.placeholder.com/100x100?text=Item',
+        image: match.name ? productImage(match) : FALLBACK_IMAGE,
         description: match.description || 'No description available',
       };
     });

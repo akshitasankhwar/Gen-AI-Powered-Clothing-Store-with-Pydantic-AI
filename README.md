@@ -8,8 +8,71 @@ Welcome to **ClothStore AI**! This project is a modern LLM-powered shopping expe
 
 ---
 
+## ⚡ Run It Locally (5 Steps)
+
+**You need:** Python **3.11** ([Miniconda](https://www.anaconda.com/download/success) recommended), a **MongoDB** connection string (a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster or a local MongoDB), and a free **[Groq API key](https://console.groq.com/keys)**.
+
+Run these commands in a terminal (in VS Code: **Terminal → New Terminal**).
+
+**1. Download the project**
+```bash
+git clone https://github.com/akshitasankhwar/Gen-AI-Powered-Clothing-Store-with-Pydantic-AI.git
+cd Gen-AI-Powered-Clothing-Store-with-Pydantic-AI
+```
+
+**2. Create and activate a Python 3.11 environment**
+```bash
+conda create -n clothstore python=3.11 -y
+conda activate clothstore
+```
+<details>
+<summary>No Conda? Use a venv instead</summary>
+
+```bash
+python -m venv venv
+venv\Scripts\activate          # Windows
+source venv/bin/activate       # Mac / Linux
+```
+On Windows PowerShell, if activation is blocked, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned` first.
+</details>
+
+**3. Install the requirements**
+```bash
+pip install -r requirements.txt
+```
+
+**4. Create your `.env` file** from the example, then open `.env` and fill in your keys
+```bash
+cp .env.example .env           # works in PowerShell, Mac and Linux (Command Prompt: copy .env.example .env)
+```
+
+| Variable | Required? | What to put |
+| :--- | :--- | :--- |
+| `MONGO_URI` | ✅ Yes | Your MongoDB connection string (Atlas → **Connect → Drivers**), or `mongodb://localhost:27017` for a local MongoDB |
+| `GROQ_API_KEY` | ✅ Yes | Your key from [console.groq.com/keys](https://console.groq.com/keys) |
+| `GROQ_MODEL` | Optional | Groq model for the AI chat (default: `openai/gpt-oss-120b`) |
+| `LOGFIRE_TOKEN` | Optional | [Pydantic Logfire](https://logfire.pydantic.dev) token for monitoring |
+
+**5. Start the store**
+```bash
+python main.py
+```
+Then open **[http://localhost:8000](http://localhost:8000)** 🎉 API docs are at [http://localhost:8000/docs](http://localhost:8000/docs).
+
+> ⚠️ The terminal prints `Uvicorn running on http://0.0.0.0:8000`. Don't open that link (browsers show `ERR_ADDRESS_INVALID`); use `localhost` instead.
+>
+> 🛍️ **First run:** the store is empty. Click **Add Products → ⚡ Generate 500 Demo Products** to fill it.
+
+**Next time**, you only need:
+```bash
+conda activate clothstore
+python main.py
+```
+
+---
+
 - **📦 Dynamic Catalog**: Browse and filter clothing products by category (Men, Women, Kids) and price range.
-- **🤖 AI Shopping Assistant**: A super-smart agent powered by **Pydantic AI** (Qwen-3 32B via Groq) that understands natural language queries and finds products instantly.
+- **🤖 AI Shopping Assistant**: A super-smart agent powered by **Pydantic AI** (GPT-OSS 120B via Groq, changeable with `GROQ_MODEL`) that understands natural language queries and finds products instantly.
 - **🛒 Smart Shopping Cart**: Add items to your cart and manage them with ease.
 - **🚀 Bulk Store Generation**: Instantly populate your database with 500+ diverse demo products for testing.
 - **📜 Simple Checkout**: Place orders using just an email identifier—no complex auth required for this demo.
@@ -41,40 +104,7 @@ Check the **[`docs/README.md`](./docs/README.md)** for the full table of content
 
 ---
 
-## 🚀 Quick Start (Running the Store)
-
-We created a simple switch to turn on the whole mall at once:
-
-1. **Prepare the Keys (Setup)**
-   - Create a `.env` file in the root directory.
-   - Add your `MONGO_URI`, `GROQ_API_KEY`, and `LOGFIRE_TOKEN`.
-   - Ensure **Python 3.10+** is installed.
-
-2. **Flick the Switch (Run Everything)**
-   ```bash
-   python main.py
-   ```
-   *This starts the server and:*
-   - Launches the FastAPI backend on `http://localhost:8000`.
-   - Automatically serves the built-in frontend.
-   - Monitors performance via Logfire.
-
----
-
-## 🏗️ Manual Tool Setup
-
-If you prefer turning things on one by one:
-
-### Start the Server
-```bash
-python -m venv venv
-venv\Scripts\activate   # (Or source venv/bin/activate on Mac/Linux)
-pip install -r requirements.txt
-python main.py
-```
-*(The native Frontend is gracefully embedded directly inside the python command!)*
-
----
+## 🔌 API Endpoints
 
 FastAPI automatically generates an interactive map for all endpoints:
 - Go to **`http://localhost:8000/docs`** to test the API!

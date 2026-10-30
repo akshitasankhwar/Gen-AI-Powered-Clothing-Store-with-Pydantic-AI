@@ -1,6 +1,7 @@
 import { state, resetAdminForm } from '../services/state.js';
 import { fetchProducts, addProduct, updateProduct, deleteProduct, deleteAllProducts, bulkGenerateProducts } from '../services/api_v2.js';
 import { renderHeader } from '../components/Header.js';
+import { productImage } from '../services/images.js';
 
 /**
  * Render the Admin dashboard page to manage products.
@@ -73,7 +74,7 @@ export async function renderAdmin() {
       <div class="product-list-grid">
         ${state.productList.map(p => `
           <div class="product-list-item">
-            <img src="${p.image}" alt="${p.name}" />
+            <img src="${productImage(p)}" alt="${p.name}" loading="lazy" />
             <h3>${p.name}</h3>
             <p>${p.description}</p>
             <p class="price">₹${p.price}</p>

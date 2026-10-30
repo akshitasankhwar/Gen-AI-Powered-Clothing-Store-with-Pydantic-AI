@@ -1,6 +1,7 @@
 import { state } from '../services/state.js';
 import { fetchProducts, addToCart, placeOrder } from '../services/api_v2.js';
 import { renderHeader } from '../components/Header.js';
+import { productImage } from '../services/images.js';
 
 export async function renderProductDetail(id) {
   const data = await fetchProducts();
@@ -20,7 +21,7 @@ export async function renderProductDetail(id) {
       <button class="back-btn" id="backBtn">← Back to Products</button>
       <div class="product-detail-grid">
         <div class="product-detail-image">
-          <img src="${product.image || 'https://via.placeholder.com/500x500?text=Product+Image'}" alt="${product.name}" />
+          <img src="${productImage(product)}" alt="${product.name}" />
         </div>
         <div class="product-detail-info">
           <span class="product-detail-category">${product.category}</span>

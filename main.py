@@ -36,4 +36,5 @@ app.mount("/", StaticFiles(directory="Frontend", html=True), name="frontend")
 
 if __name__ == "__main__":
     print("⚙️ Starting backend server (FastAPI)...")
+    print("🛍️ Open the store in your browser: http://localhost:8000  (API docs: http://localhost:8000/docs)")
     uvicorn.run(app, host="0.0.0.0", port=8000)

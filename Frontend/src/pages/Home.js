@@ -4,6 +4,18 @@ import { renderHeader } from '../components/Header.js';
 import { renderHero } from '../components/Hero.js';
 import { renderChatbot } from '../components/Chatbot.js';
 import { navigate } from '../router.js';
+import { productImage, SHOWCASE } from '../services/images.js';
+
+// "Shop by vibe" picture tiles
+const VIBES = [
+  { cat: 'women', label: 'Women', note: 'Sarees to sequins' },
+  { cat: 'men', label: 'Men', note: 'Jackets, fits, staples' },
+  { cat: 'kids', label: 'Kids', note: 'Tiny fits, big energy' },
+];
+
+// Play entry animations only when the product list changes,
+// not when the chat opens or an item is added to the cart
+let lastGridKey = null;
 
 // Price range options shown in the filter bar
 const PRICE_RANGES = [
@@ -20,11 +32,27 @@ export async function renderHome() {
   const data = await fetchProducts(state.currentCategory, min, max);
   state.products = data;
 
+  const gridKey = `${state.currentCategory}|${min}|${max}`;
+  const animateHero = lastGridKey === null;
+  const animateGrid = gridKey !== lastGridKey;
+  lastGridKey = gridKey;
+
   document.getElementById('app').innerHTML = `
     ${renderHeader()}
-    ${renderHero()}
-    <div class="products-section">
-      <h2 class="section-title">Our Products</h2>
+    ${renderHero(animateHero)}
+    <section class="vibes container">
+      <h2 class="section-title">Shop by vibe</h2>
+      <div class="vibe-grid">
+        ${VIBES.map(v => `
+          <button class="vibe-tile ${state.currentCategory === v.cat ? 'active' : ''}" onclick="handleCatClick('${v.cat}')">
+            <img src="${SHOWCASE[v.cat]}" alt="${v.label} collection" loading="lazy" />
+            <span class="vibe-label">${v.label}<small>${v.note}</small></span>
+          </button>
+        `).join('')}
+      </div>
+    </section>
+    <div class="products-section container" id="shop">
+      <h2 class="section-title">Fresh drops <span class="section-count">${state.products.length} styles</span></h2>
 
       <!-- Price Range Filter Bar -->
       <div class="price-filter-bar" id="price-filter-container">
@@ -38,22 +66,21 @@ export async function renderHome() {
         }).join('')}
       </div>
 
-      <div class="products-grid">
+      <div class="products-grid ${animateGrid ? 'animate-in' : ''}">
         ${state.products.length === 0
-          ? `<p style="grid-column:1/-1;text-align:center;color:#888;padding:40px">No products found for this filter.</p>`
-          : state.products.map(p => `
-            <div class="product-card" data-id="${p.id}">
+          ? `<p class="empty-state">No fits in this range yet. Try another filter.</p>`
+          : state.products.map((p, i) => `
+            <div class="product-card" data-id="${p.id}" style="--i: ${Math.min(i, 12)}">
               <div class="product-image">
-                ${p.image
-                  ? `<img src="${p.image}" alt="${p.name}" loading="lazy" />`
-                  : `<span class="product-placeholder">Product Image</span>`}
+                <img src="${productImage(p)}" alt="${p.name}" loading="lazy" />
+                <span class="product-category">${p.category}</span>
               </div>
               <div class="product-info">
                 <h3 class="product-name">${p.name}</h3>
                 <p class="product-desc">${p.description}</p>
                 <div class="product-footer">
                   <span class="product-price">₹${p.price}</span>
-                  <span class="product-category">${p.category}</span>
+                  <span class="product-rating">★ ${p.rating}</span>
                 </div>
                 <button class="add-to-cart-btn" data-id="${p.id}">Add to Cart</button>
               </div>
@@ -71,7 +98,13 @@ export async function renderHome() {
 window.handleCatClick = async function(cat) {
   state.currentCategory = cat;
   state.priceFilter = { min: null, max: null }; // reset price filter on category change
-  renderHome();
+  // From the cart or a product page, go back to the store first
+  if (window.location.hash && window.location.hash !== '#/') {
+    window.location.hash = '#/';
+    return;
+  }
+  await renderHome();
+  document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
 };
 
 function setupHomeEvents() {
@@ -136,6 +169,10 @@ function setupHomeEvents() {
   document.querySelectorAll('.product-recommendation').forEach(el => {
     el.addEventListener('click', () => navigate(`#/product/${el.dataset.id}`));
   });
+
+  // Keep the latest chat message in view
+  const chatBox = document.querySelector('.chatbot-messages');
+  if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 async function handleChatSend() {
